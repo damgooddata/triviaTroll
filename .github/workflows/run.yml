@@ -19,9 +19,7 @@ jobs:
           playwright install --with-deps chromium
 
       - name: Run script
-        run: python script.py
-        env:
-          MY_PASSWORD: ${{ secrets.MY_PASSWORD }}
+        run: python kava_feud_survey.py
 
       - name: Upload output
         if: always()

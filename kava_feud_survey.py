@@ -36,7 +36,7 @@ def main() -> int:
             try:
                 page.get_by_text(QUESTIONS[0], exact=True).wait_for(timeout=15000)
             except PlaywrightTimeoutError:
-                if page.get_by_text("All done â thanks!", exact=True).is_visible():
+                if page.get_by_text("All done — thanks!", exact=True).is_visible():
                     print("This browser profile has already submitted a response.")
                     return 0
                 print("The survey did not show the expected questions. Nothing was submitted.")
@@ -47,18 +47,18 @@ def main() -> int:
                     print(f"Survey question changed: {question!r}. Nothing was submitted.")
                     return 1
 
-            fields = page.get_by_role("textbox", name="Your answerâ¦")
+            fields = page.get_by_role("textbox", name="Your answer…")
             if fields.count() != len(QUESTIONS):
                 print(f"Expected five answer fields; found {fields.count()}. Nothing was submitted.")
                 return 1
 
             for index, answer in enumerate(args.answers):
                 fields.nth(index).fill(answer)
-                print(f"{index + 1}. {QUESTIONS[index]}  â  {answer}")
+                print(f"{index + 1}. {QUESTIONS[index]}  →  {answer}")
 
             page.get_by_role("button", name="Submit my answers").click()
             try:
-                page.get_by_text("Submitted â thanks!", exact=True).wait_for(timeout=15000)
+                page.get_by_text("Submitted — thanks!", exact=True).wait_for(timeout=15000)
             except PlaywrightTimeoutError:
                 print("Submission could not be confirmed. Inspect the browser before trying again.")
                 return 1
