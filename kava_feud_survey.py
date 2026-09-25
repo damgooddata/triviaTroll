@@ -29,7 +29,7 @@ def main() -> int:
     args = parser.parse_args()
 
     with sync_playwright() as playwright:
-        context = playwright.chromium.launch_persistent_context(str(args.profile), headless=False)
+        context = playwright.chromium.launch_persistent_context(str(args.profile), headless=True)
         try:
             page = context.pages[0] if context.pages else context.new_page()
             page.goto(URL, wait_until="domcontentloaded")
