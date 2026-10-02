@@ -6,13 +6,6 @@ from playwright.sync_api import sync_playwright
 
 
 URL = "https://kavafeud.netlify.app/feud-survey.html"
-QUESTIONS = (
-    "Name a superhero with an animal in their name.",
-    "Name a super power you'd like to have",
-    "Name something a superhero wears.",
-    "Name the worst superpower to have.",
-    "Name something that's in Deadpool's browser history.",
-)
 DEFAULT_ANSWERS = ("Barney", "Super jizz", "Condom", "tiny dick", "Furry porn")
 
 
@@ -33,28 +26,24 @@ def main() -> int:
         try:
             page = context.pages[0] if context.pages else context.new_page()
             page.goto(URL, wait_until="domcontentloaded")
+            fields = page.get_by_role("textbox", name="Your answer…")
             try:
-                page.get_by_text(QUESTIONS[0], exact=True).wait_for(timeout=15000)
+                fields.first.wait_for(timeout=15000)
             except PlaywrightTimeoutError:
                 if page.get_by_text("All done — thanks!", exact=True).is_visible():
                     print("This browser profile has already submitted a response.")
                     return 0
-                print("The survey did not show the expected questions. Nothing was submitted.")
+                print("The survey did not show any answer fields. Nothing was submitted.")
                 return 1
 
-            for question in QUESTIONS:
-                if not page.get_by_text(question, exact=True).is_visible():
-                    print(f"Survey question changed: {question!r}. Nothing was submitted.")
-                    return 1
-
-            fields = page.get_by_role("textbox", name="Your answer…")
-            if fields.count() != len(QUESTIONS):
-                print(f"Expected five answer fields; found {fields.count()}. Nothing was submitted.")
+            if fields.count() != len(args.answers):
+                print(f"Expected {len(args.answers)} answer fields; found {fields.count()}. Nothing was submitted.")
                 return 1
 
+            # Fill positionally: field N gets answer N, regardless of the question wording.
             for index, answer in enumerate(args.answers):
                 fields.nth(index).fill(answer)
-                print(f"{index + 1}. {QUESTIONS[index]}  →  {answer}")
+                print(f"{index + 1}. → {answer}")
 
             page.get_by_role("button", name="Submit my answers").click()
             try:
