@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright
 
 
 URL = "https://kavafeud.netlify.app/feud-survey.html"
-DEFAULT_ANSWERS = ("Barney", "Super jizz", "Condom", "tiny dick", "Furry porn")
+DEFAULT_ANSWERS = ("A used condom labeled “Fun Size.”", "Christian —already sucks me dry every month.", "Cum-filled Gushers", "You look just like my sister. That’s my favorite part.", "A butt plug where the gearshift should be")
 
 
 def main() -> int:
